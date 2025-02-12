@@ -1,0 +1,25 @@
+<mat-card *ngIf="pokemon$ | async as pokemon">
+  <img
+    [ngSrc]="pokemon.sprites.front_default"
+    [alt]="pokemon.name"
+    width="96"
+    height="96"
+    priority
+  />
+  <h2>{{ pokemon.name }}</h2>
+  <p><strong>Type(s):</strong></p>
+  <ul>
+    <li *ngFor="let type of pokemon.types">{{ type.type.name }}</li>
+  </ul>
+  <p>Abilities:</p>
+  <ul>
+    <li *ngFor="let ability of pokemon.abilities">{{ ability.ability.name }}</li>
+  </ul>
+  <p>Stats:</p>
+  <ul>
+    <li *ngFor="let stat of pokemon.stats">{{ stat.stat.name }}: {{ stat.base_stat }}</li>
+  </ul>
+  <button mat-button color="primary" (click)="goBack()">Back to List</button>
+</mat-card>
+
+<div *ngIf="!(pokemon$ | async)">Loading...</div>

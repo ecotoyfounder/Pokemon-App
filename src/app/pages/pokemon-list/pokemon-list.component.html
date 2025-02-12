@@ -1,0 +1,23 @@
+<div *ngIf="loading$ | async">Loading...</div>
+<div *ngIf="error$ | async as error" class="error">
+  <p>⚠️ Error: {{ error }}</p>
+</div>
+
+<div *ngIf="!(loading$ | async)">
+  <mat-card *ngFor="let pokemon of pokemons$ | async">
+    <img
+      [ngSrc]="pokemon.sprites.front_default"
+      [alt]="pokemon.name"
+      width="96"
+      height="96"
+      priority
+    />
+    <h3>{{ pokemon.name }}</h3>
+    <button mat-button [routerLink]="['/pokemon', pokemon.id]">View Details</button>
+  </mat-card>
+
+  <div class="pagination">
+    <button mat-button (click)="prevPage()" [disabled]="currentPage === 0">Previous</button>
+    <button mat-button (click)="nextPage()">Next</button>
+  </div>
+</div>
