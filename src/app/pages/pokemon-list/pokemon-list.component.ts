@@ -18,6 +18,9 @@ import { MatCard } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
 import { getPokemonGradient } from '../../../utils/gradients';
 import { MatDivider } from '@angular/material/divider';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-pokemon-list',
@@ -34,6 +37,10 @@ import { MatDivider } from '@angular/material/divider';
     UpperCasePipe,
     MatDivider,
     TitleCasePipe,
+    MatFormField,
+    MatInputModule,
+    MatFormFieldModule,
+    FormsModule,
   ],
   templateUrl: './pokemon-list.component.html',
   styleUrl: './pokemon-list.component.scss',
@@ -47,9 +54,20 @@ export class PokemonListComponent implements OnInit {
   limit = 18;
 
   pokemonList = signal<Pokemon[]>([]);
+  searchTerm = signal<string>('');
+
+  filteredPokemons = computed(() => {
+    const term = this.searchTerm().toLowerCase().trim();
+    return this.pokemonList().filter(
+      (pokemon) =>
+        pokemon.name.toLowerCase().includes(term) ||
+        pokemon.types.some((t) => t.type.name.toLowerCase().includes(term)),
+    );
+  });
+
   pokemonGradients = computed(() =>
-    this.pokemonList().map((pokemon) => {
-      return pokemon.types
+    this.filteredPokemons().map((pokemon) => {
+      return pokemon.types.length > 0
         ? getPokemonGradient(pokemon.types)
         : 'linear-gradient(to bottom right, #9e9e9e, #cfd8dc)';
     }),
