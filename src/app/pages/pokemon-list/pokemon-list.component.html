@@ -1,8 +1,14 @@
 <div class="box">
   <h1>Pokemons</h1>
+  <div class="search-bar">
+    <mat-form-field appearance="outline">
+      <mat-label>Search by name or type</mat-label>
+      <input matInput [(ngModel)]="searchTerm" placeholder="Enter Pokémon name or type..." />
+    </mat-form-field>
+  </div>
   <div class="pokemon-list">
     <mat-card
-      *ngFor="let pokemon of pokemons$ | async; let i = index"
+      *ngFor="let pokemon of filteredPokemons(); let i = index"
       class="pokemon-card"
       [ngStyle]="{ '--pokemon-bg': pokemonGradients()[i] }"
     >

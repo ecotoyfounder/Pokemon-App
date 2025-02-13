@@ -6,6 +6,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PokemonListComponent', () => {
   let component: PokemonListComponent;
@@ -31,6 +35,10 @@ describe('PokemonListComponent', () => {
         MatCardModule,
         MatButtonModule,
         MatDividerModule,
+        MatFormFieldModule,
+        MatInputModule,
+        FormsModule,
+        NoopAnimationsModule, // Добавлено для устранения ошибки анимации
       ],
       providers: [
         provideMockStore({
