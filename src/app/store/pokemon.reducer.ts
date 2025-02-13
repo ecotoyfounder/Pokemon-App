@@ -9,7 +9,7 @@ export interface PokemonState {
   error: string | null;
 }
 
-const initialState: PokemonState = {
+export const initialState: PokemonState = {
   pokemons: [],
   selectedPokemon: null,
   loading: false,
