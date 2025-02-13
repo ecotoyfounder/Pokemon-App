@@ -1,23 +1,31 @@
-<div *ngIf="loading$ | async">Loading...</div>
-<div *ngIf="error$ | async as error" class="error">
-  <p>⚠️ Error: {{ error }}</p>
-</div>
+<div class="box">
+  <h1>Pokemons</h1>
+  <div class="pokemon-list">
+    <mat-card
+      *ngFor="let pokemon of pokemons$ | async; let i = index"
+      class="pokemon-card"
+      [ngStyle]="{ '--pokemon-bg': pokemonGradients()[i] }"
+    >
+      <div class="card">
+        <h3 class="mat-headline-6">{{ pokemon.name | titlecase }}</h3>
+        <img [ngSrc]="pokemon.sprites.front_default" [alt]="pokemon.name" fill priority />
+        <ul class="pokemon-types">
+          <li *ngFor="let type of pokemon.types" class="mat-body-2">
+            {{ type.type.name | uppercase }}
+          </li>
+        </ul>
+      </div>
 
-<div *ngIf="!(loading$ | async)">
-  <mat-card *ngFor="let pokemon of pokemons$ | async">
-    <img
-      [ngSrc]="pokemon.sprites.front_default"
-      [alt]="pokemon.name"
-      width="96"
-      height="96"
-      priority
-    />
-    <h3>{{ pokemon.name }}</h3>
-    <button mat-button [routerLink]="['/pokemon', pokemon.id]">View Details</button>
-  </mat-card>
+      <mat-divider></mat-divider>
+
+      <button mat-button color="primary" [routerLink]="['/pokemon', pokemon.id]">
+        View Details
+      </button>
+    </mat-card>
+  </div>
 
   <div class="pagination">
-    <button mat-button (click)="prevPage()" [disabled]="currentPage === 0">Previous</button>
-    <button mat-button (click)="nextPage()">Next</button>
+    <button mat-button (click)="prevPage()" [disabled]="currentPage === 0">Step Back</button>
+    <button mat-button (click)="nextPage()">Load More</button>
   </div>
 </div>

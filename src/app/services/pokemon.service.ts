@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { Pokemon } from '../models/pokemon';
+import { PokemonType } from '../models/pokemon-type';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class PokemonService {
 
   constructor(private http: HttpClient) {}
 
-  getPokemons(limit = 20, offset = 0): Observable<Pokemon[]> {
+  getPokemons(limit = 18, offset = 0): Observable<Pokemon[]> {
     return this.http
       .get<{
         results: { name: string; url: string }[];
@@ -24,10 +25,29 @@ export class PokemonService {
             sprites: {
               front_default: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${offset + index + 1}.png`,
             },
+            width: '',
+            height: '',
             types: [],
             abilities: [],
             stats: [],
           })),
+        ),
+        switchMap((pokemons) =>
+          forkJoin(
+            pokemons.map((pokemon) =>
+              this.http
+                .get<{ types: { type: { name: string } }[] }>(`${this.apiUrl}/${pokemon.id}`)
+                .pipe(
+                  map((data) => ({
+                    ...pokemon,
+                    types: data.types.map((t) => ({
+                      type: { name: t.type.name as PokemonType },
+                    })),
+                  })),
+                  catchError(() => of(pokemon)),
+                ),
+            ),
+          ),
         ),
       );
   }
